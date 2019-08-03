@@ -12,9 +12,15 @@ class TodoListViewController: UITableViewController {
 
     var itemArray = ["do course","assignment work pending","go to walk"]
     
+    let defaults = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        if let items = defaults.array(forKey: "TodoListArray") as? [String]{
+            itemArray = items
+        }
     }
     
     
@@ -64,8 +70,22 @@ class TodoListViewController: UITableViewController {
     
     let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
         //what will happen once the user clicks the Add Item Button on our UIAlert
-    
+     if textField.text != ""
+     {
         self.itemArray.append(textField.text!)
+        
+        self.defaults.set(self.itemArray, forKey: "TodoListArray")
+        
+        print(textField.text!)
+     } else {
+        print("Empty String")
+        
+//        let innerAlert = UIAlertController(title: nil, message: "Empty String cannot be added", preferredStyle: .alert)
+//        innerAlert.addAction(UIAlertAction(title: "OK", style: .default, handler:nil))
+//        self.present(innerAlert, animated: true, completion: nil)
+//
+        
+        }
         
         self.tableView.reloadData()
         
