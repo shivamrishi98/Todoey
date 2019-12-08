@@ -14,6 +14,7 @@
 		962731EA22F340DE00CD8ABC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 962731E822F340DE00CD8ABC /* Main.storyboard */; };
 		962731EC22F340E000CD8ABC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 962731EB22F340E000CD8ABC /* Assets.xcassets */; };
 		962731EF22F340E000CD8ABC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 962731ED22F340E000CD8ABC /* LaunchScreen.storyboard */; };
+		965EE88B2397DFE1006D8A6E /* SwipeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 965EE88A2397DFE0006D8A6E /* SwipeTableViewController.swift */; };
 		96928D0E22FEB6B600DEA4CF /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96928D0D22FEB6B600DEA4CF /* Category.swift */; };
 		96928D1022FEB6BB00DEA4CF /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96928D0F22FEB6BB00DEA4CF /* Item.swift */; };
 /* End PBXBuildFile section */
@@ -28,6 +29,7 @@
 		962731EB22F340E000CD8ABC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		962731EE22F340E000CD8ABC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		962731F022F340E000CD8ABC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		965EE88A2397DFE0006D8A6E /* SwipeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeTableViewController.swift; sourceTree = "<group>"; };
 		96928D0D22FEB6B600DEA4CF /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		96928D0F22FEB6BB00DEA4CF /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		E9EAA65C38EDF337FCA6E295 /* Pods-Todoey.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Todoey.release.xcconfig"; path = "Target Support Files/Pods-Todoey/Pods-Todoey.release.xcconfig"; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 			children = (
 				96129C0B22F9C99400BBC4A2 /* CategoryViewController.swift */,
 				962731E622F340DE00CD8ABC /* TodoListViewController.swift */,
+				965EE88A2397DFE0006D8A6E /* SwipeTableViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -248,6 +251,7 @@
 				96129C0C22F9C99400BBC4A2 /* CategoryViewController.swift in Sources */,
 				962731E722F340DE00CD8ABC /* TodoListViewController.swift in Sources */,
 				962731E522F340DE00CD8ABC /* AppDelegate.swift in Sources */,
+				965EE88B2397DFE1006D8A6E /* SwipeTableViewController.swift in Sources */,
 				96928D0E22FEB6B600DEA4CF /* Category.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -8,13 +8,15 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
-class TodoListViewController: UITableViewController {
+class TodoListViewController: SwipeTableViewController {
 
     var todoItems : Results<Item>?
     
     let realm = try! Realm()
     
+    @IBOutlet weak var searchBar: UISearchBar!
     
     var selectedCategory : Category?
     {
@@ -32,7 +34,56 @@ class TodoListViewController: UITableViewController {
       
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
 
+        tableView.separatorStyle = .none
       
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+    
+        if let colorHex = selectedCategory?.colorHex
+        {
+            
+            
+            title = selectedCategory!.name
+            
+            guard let navbar = navigationController?.navigationBar else {
+                fatalError("Navigation controller does not exist.")
+            }
+            
+            
+            if let navBarColor = UIColor(hexString: colorHex)
+            {
+                if #available(iOS 13.0, *) {
+                    let appearance = UINavigationBarAppearance().self
+                                    
+                    appearance.backgroundColor = navBarColor
+                    appearance.largeTitleTextAttributes = [
+                        NSAttributedString.Key.foregroundColor: ContrastColorOf(navBarColor, returnFlat: true)]
+                 
+                    navbar.standardAppearance = appearance
+                    navbar.compactAppearance = appearance
+                    navbar.scrollEdgeAppearance = appearance
+                    navbar.tintColor = ContrastColorOf(navBarColor,returnFlat: true)
+                                    
+                } else {
+                    navbar.barTintColor = navBarColor
+                    navbar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+                    navbar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: ContrastColorOf(navBarColor, returnFlat: true)]
+                }
+                
+//                navbar.backgroundColor = navBarColor
+//
+//                navbar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+//
+//                navbar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : ContrastColorOf(navBarColor, returnFlat: true)]
+//
+                searchBar.barTintColor = navBarColor
+                searchBar.searchTextField.backgroundColor = FlatWhite()
+                
+            }
+        }
+        
     }
     
     
@@ -41,14 +92,20 @@ class TodoListViewController: UITableViewController {
     //MARK: - TableView Datasource Methods
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
+       
+         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         if let item = todoItems?[indexPath.row] {
         
         
         cell.textLabel?.text = item.title
         
-        
+              
+            if let color = UIColor(hexString: selectedCategory!.colorHex)?.darken(byPercentage: CGFloat(indexPath.row) / CGFloat(todoItems!.count))
+            {
+                cell.backgroundColor = color
+                cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
+            }
         
         cell.accessoryType = item.done ? .checkmark : .none
         } else {
@@ -88,29 +145,7 @@ class TodoListViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        
-        if editingStyle == .delete
-        {
-
-            if let item = todoItems?[indexPath.row]
-            {
-                do
-                {
-                    try realm.write {
-                        realm.delete(item)
-                    }
-                }
-                    
-                catch
-                {
-                    print("\(error)")
-                }
-            }
-            tableView.reloadData()
-            
-    }
-    }
+   
     
     //MARK: - Add New Items
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
@@ -151,10 +186,10 @@ class TodoListViewController: UITableViewController {
      } else {
         print("Empty String")
         
-//        let innerAlert = UIAlertController(title: nil, message: "Empty String cannot be added", preferredStyle: .alert)
-//        innerAlert.addAction(UIAlertAction(title: "OK", style: .default, handler:nil))
-//        self.present(innerAlert, animated: true, completion: nil)
-//
+        let innerAlert = UIAlertController(title: nil, message: "Empty String cannot be added", preferredStyle: .alert)
+        innerAlert.addAction(UIAlertAction(title: "OK", style: .default, handler:nil))
+        self.present(innerAlert, animated: true, completion: nil)
+
         
         }
         
@@ -174,10 +209,56 @@ class TodoListViewController: UITableViewController {
     
     }
     
+    
+    
+    //MARK: - Delete Data from swipe
+     override func updateModel(at indexPath: IndexPath)
+     {
+         
+          if let item = self.todoItems?[indexPath.row]
+                     {
+                         do
+                         {
+                             try self.realm.write {
+                                 self.realm.delete(item)
+                             }
+                         }
+         
+                         catch
+                         {
+                             print("\(error)")
+                         }
+                     }
+     }
+    
+//    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+//
+//           if editingStyle == .delete
+//           {
+//
+//               if let item = todoItems?[indexPath.row]
+//               {
+//                   do
+//                   {
+//                       try realm.write {
+//                           realm.delete(item)
+//                       }
+//                   }
+//
+//                   catch
+//                   {
+//                       print("\(error)")
+//                   }
+//               }
+//               tableView.reloadData()
+//
+//       }
+//       }
+    
+    
+    
+    
     //MARK:- Model Manupulation Methods
-    
- 
-    
     
     func loadItems()
     {

@@ -8,8 +8,10 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
-class CategoryViewController: UITableViewController {
+
+class CategoryViewController: SwipeTableViewController {
 
     
     var categoryArray : Results<Category>?
@@ -25,7 +27,87 @@ class CategoryViewController: UITableViewController {
 
       loadCategories()
         
+        tableView.separatorStyle = .none
+        
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        guard let navbar = navigationController?.navigationBar else {
+                     fatalError("Navigation controller does not exist.")
+                 }
+        
+        if let navBarColor = UIColor(hexString: "1D9BF6")
+                   {
+                    
+                    if #available(iOS 13.0, *) {
+                        let appearance = UINavigationBarAppearance().self
+                                        
+                        appearance.backgroundColor = navBarColor
+                        appearance.largeTitleTextAttributes = [
+                            NSAttributedString.Key.foregroundColor: ContrastColorOf(navBarColor, returnFlat: true)]
+                     
+                        navbar.standardAppearance = appearance
+                        navbar.compactAppearance = appearance
+                        navbar.scrollEdgeAppearance = appearance
+                        navbar.tintColor = ContrastColorOf(navBarColor,returnFlat: true)
+                                        
+                    } else {
+                        navbar.barTintColor = navBarColor
+                        navbar.tintColor = ContrastColorOf(navBarColor, returnFlat: true)
+                        navbar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: ContrastColorOf(navBarColor, returnFlat: true)]
+                    }
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+//                    navbar.backgroundColor = navBarColor
+//
+//                    navbar.tintColor = ContrastColorOf(navbar.backgroundColor!, returnFlat: true)
+//
+//                       navbar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor : ContrastColorOf(navBarColor, returnFlat: true)]
+//
+//
+                       
+                   }
+        
+      
+        
+        
+        
+        
+    }
+    
+    
+    
+    //MARK: - Delete Data from swipe
+    override func updateModel(at indexPath: IndexPath)
+    {
+        
+         if let item = self.categoryArray?[indexPath.row]
+                    {
+                        do
+                        {
+                            try self.realm.write {
+                                self.realm.delete(item)
+                            }
+                        }
+        
+                        catch
+                        {
+                            print("\(error)")
+                        }
+                    }
+    }
+    
+    
+    
+    
 
     //MARK: - Add New Categories
     
@@ -45,7 +127,7 @@ class CategoryViewController: UITableViewController {
                 let newCategory = Category()
                 
                 newCategory.name = textField.text!
-
+                newCategory.colorHex = UIColor.randomFlat().hexValue()
                 self.save(category: newCategory)
             
             } else {
@@ -73,14 +155,21 @@ class CategoryViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+                 let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
-        let category = categoryArray?[indexPath.row]
-        
-        cell.textLabel?.text = category?.name ?? "No category added yet"
-        
-        
-        return cell
+                let category = categoryArray?[indexPath.row]
+                
+                cell.textLabel?.text = category?.name ?? "No category added yet"
+     
+        if let color = UIColor(hexString: category?.colorHex ?? "1d98f6")
+        {
+            cell.backgroundColor = color
+    
+            cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
+                  
+        }
+              
+                return cell
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -139,3 +228,4 @@ class CategoryViewController: UITableViewController {
     
     
 }
+
